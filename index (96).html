@@ -1,0 +1,2254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The RestaurantOS AI | AI-Powered Operating System for Modern Restaurants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* The RestaurantOS AI  Restaurant Colours: Burgundy, Gold, Cream */
+  --blue:#8B1A2E;
+  --blue-light:#B5253F;
+  --blue-dim:#6B1422;
+  --blue-dark:#4A0E18;
+  --blue-deeper:#2D0810;
+
+  --accent:#C4932A;
+  --accent-light:#F2DFA0;
+  --accent-dim:#D4A843;
+
+  /* Nav / Footer BG Deep Burgundy */
+  --nav-bg:#8B1A2E;
+  --footer-bg:#4A0E18;
+
+  /* Page Backgrounds Cream / Warm White */
+  --bg-white:#FFFDF9;
+  --bg-light:#FDF6EC;
+  --bg-section:#FAE8CC;
+  --bg-card:#FFFDF9;
+
+  --card-border:rgba(139,26,46,0.18);
+  --card-border-strong:rgba(139,26,46,0.38);
+
+  --text-dark:#1A0A0E;
+  --text-mid:#4A1A22;
+  --text-muted:#7A4A52;
+  --text-light:#A07880;
+  --white:#FFFFFF;
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--text-dark);background:var(--bg-white);overflow-x:hidden;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-light);}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
+
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:var(--nav-bg);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+  box-shadow:0 2px 24px rgba(7,89,133,0.3);
+}
+.nav-logo{
+  font-family:var(--display);font-size:18px;font-weight:800;
+  color:var(--white);letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:rgba(255,255,255,0.2);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+}
+.nav-logo-icon svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:rgba(255,255,255,0.85);
+  font-size:11px;font-weight:600;
+  padding:8px 14px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:#fff;background:rgba(255,255,255,0.15);}
+.nav-links li button.active{color:#fff;background:rgba(255,255,255,0.2);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--white);border-radius:2px;
+}
+
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:var(--white);
+  color:var(--blue-dark);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,0.25);background:var(--accent-light);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:var(--blue-dark);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(255,255,255,0.1);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:rgba(255,255,255,0.8);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:var(--white);
+  color:var(--blue-dark);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────────────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────────────────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-dim);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--blue);}
+.label-tag-white{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.8);margin-bottom:14px;
+}
+.label-tag-white::before{content:'';width:20px;height:1px;background:rgba(255,255,255,0.6);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.blue-txt{color:var(--blue-dark);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-blue{background:linear-gradient(90deg,var(--blue),transparent);}
+.divider-white{background:linear-gradient(90deg,rgba(255,255,255,0.8),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--text-mid);line-height:1.85;font-size:17px;}
+.para-light{color:rgba(255,255,255,0.85);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:var(--white);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(139,26,46,0.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(139,26,46,0.5);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--blue);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(139,26,46,0.08);border-color:var(--blue-dim);}
+
+.btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+}
+.btn-white:hover{transform:translateY(-2px);background:var(--accent-light);box-shadow:0 8px 28px rgba(0,0,0,0.2);}
+
+/* ─── STATUS BADGES ─────────────────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-blue{background:rgba(139,26,46,0.1);color:var(--blue-dim);border:1px solid rgba(139,26,46,0.28);}
+.risk-light{background:rgba(242,223,160,0.5);color:var(--blue-dark);border:1px solid rgba(139,26,46,0.25);}
+.risk-green{background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.25);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ─────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 40%,#F2DFA0 100%);
+  padding:clamp(60px,10vw,100px) 0 clamp(50px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,26,46,0.12) 0%,transparent 70%);
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);
+  align-items:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(139,26,46,0.12);border:1px solid rgba(139,26,46,0.3);
+  border-radius:30px;padding:6px 16px;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--blue-dim);letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:22px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+h1{
+  font-family:var(--display);font-size:clamp(34px,5vw,64px);
+  font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text-dark);
+  margin-bottom:6px;
+}
+h1 .blue{color:var(--blue);}
+h1 .dark-blue{color:var(--blue-dark);}
+.hero-rule{width:48px;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-light));border-radius:2px;margin:20px 0;}
+.hero-body{font-size:17px;color:var(--text-mid);line-height:1.8;margin-bottom:28px;max-width:540px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+
+.hero-mini-stats{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+.hero-mini-card{
+  background:rgba(255,255,255,0.8);
+  border:1px solid rgba(139,26,46,0.2);
+  border-radius:12px;padding:14px 18px;min-width:140px;
+  backdrop-filter:blur(8px);
+}
+.hero-mini-card strong{
+  display:block;font-family:var(--display);
+  font-size:22px;font-weight:800;color:var(--blue-dark);
+}
+.hero-mini-card span{font-size:11px;color:var(--text-muted);font-family:var(--mono);}
+
+/* DASHBOARD CARD */
+.score-card{
+  background:#fff;border-radius:18px;
+  border:1px solid rgba(139,26,46,0.18);
+  padding:24px;box-shadow:0 8px 40px rgba(139,26,46,0.12);
+}
+.score-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.score-card-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.dashboard-title{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);}
+.live-dot-wrap{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--blue);letter-spacing:1.5px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 1.5s infinite;}
+.score-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(139,26,46,0.08);}
+.score-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;}
+.score-icon.blue-bg{background:rgba(139,26,46,0.12);color:var(--blue-dim);}
+.score-icon.light-bg{background:rgba(242,223,160,0.4);color:var(--blue-dark);}
+.score-icon.green-bg{background:rgba(16,185,129,0.1);color:#059669;}
+.score-lbl{flex:1;font-size:12px;color:var(--text-muted);}
+.score-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big{display:flex;align-items:center;gap:16px;margin-top:18px;padding:16px;background:linear-gradient(135deg,rgba(139,26,46,0.08),rgba(242,223,160,0.15));border-radius:12px;border:1px solid rgba(139,26,46,0.15);}
+.score-big-num{font-family:var(--display);font-size:48px;font-weight:800;color:var(--blue);line-height:1;}
+.score-big-info .label{font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big-info .sub{font-size:11px;color:var(--text-muted);margin-top:3px;font-family:var(--mono);}
+
+/* ─── STATS STRIP ─────────────────────────────────────── */
+.section-blue{
+  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-deeper) 100%);
+  padding:clamp(60px,8vw,96px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;
+}
+.stat-card{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  text-align:center;transition:transform 0.25s,border-color 0.25s;
+}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.3);}
+.stat-num{font-family:var(--display);font-size:clamp(32px,4vw,48px);font-weight:800;color:#fff;margin-bottom:10px;}
+.stat-lbl{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;}
+
+/* ─── PLATFORM SECTION ─────────────────────────────────── */
+.platform-section{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.platform-sub{max-width:760px;margin-bottom:44px;color:var(--text-mid);}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.platform-card{
+  background:#fff;border:1px solid rgba(139,26,46,0.15);
+  border-radius:18px;overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s;
+  box-shadow:0 2px 12px rgba(139,26,46,0.06);
+}
+.platform-card:hover{border-color:rgba(139,26,46,0.35);box-shadow:0 12px 40px rgba(139,26,46,0.12);transform:translateY(-3px);}
+.platform-img-wrap{width:100%;height:180px;overflow:hidden;background:linear-gradient(135deg,var(--bg-light),var(--bg-section));}
+.platform-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.platform-card .inner{padding:22px;}
+.element-badge{
+  display:inline-block;background:rgba(139,26,46,0.1);
+  color:var(--blue-dim);border-radius:6px;
+  padding:3px 10px;font-family:var(--mono);font-size:9px;
+  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:12px;border:1px solid rgba(139,26,46,0.18);
+}
+.platform-card h3{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);margin-bottom:10px;line-height:1.3;}
+.platform-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+.more-text{display:none;font-size:13px;color:var(--text-muted);line-height:1.75;margin-top:10px;padding-top:10px;border-top:1px solid rgba(139,26,46,0.1);}
+.platform-card.open .more-text{display:block;}
+.expand-btn{
+  margin-top:16px;background:none;border:1px solid rgba(139,26,46,0.28);
+  color:var(--blue-dim);padding:7px 18px;border-radius:7px;
+  font-size:11px;font-weight:700;cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(139,26,46,0.08);border-color:var(--blue);}
+
+/* ─── WHY SECTION ─────────────────────────────────────── */
+.why-section{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;}
+.why-card{
+  background:#fff;border:1px solid rgba(139,26,46,0.15);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  transition:border-color 0.25s,box-shadow 0.25s;
+}
+.why-card:hover{border-color:rgba(139,26,46,0.35);box-shadow:0 8px 28px rgba(139,26,46,0.1);}
+.why-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(139,26,46,0.12),rgba(242,223,160,0.2));
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;font-size:20px;color:var(--blue);
+  border:1px solid rgba(139,26,46,0.18);
+}
+.why-card h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+.why-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+
+/* ─── SECTION LIGHT / ALT ─────────────────────────────── */
+.section-light{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.section-alt{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+
+/* ─── MARKET CHARTS ─────────────────────────────────────── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.chart-card{
+  background:#fff;border:1px solid rgba(139,26,46,0.15);
+  border-radius:18px;padding:24px;
+  box-shadow:0 4px 16px rgba(139,26,46,0.06);
+}
+.chart-card h4{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.chart-card p{font-size:12px;color:var(--text-muted);margin-bottom:20px;font-family:var(--mono);}
+.chart-wrap{height:260px;position:relative;}
+
+/* ─── ABOUT PAGE ─────────────────────────────────────────── */
+.about-hero{
+  background:linear-gradient(140deg,#FAE8CC 0%,#F2DFA0 60%,#D4A843 100%);
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.about-hero::after{
+  content:'';position:absolute;bottom:-60px;left:-60px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,26,46,0.15) 0%,transparent 70%);
+}
+.about-hero .container{position:relative;z-index:1;}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.founder-card{
+  background:#fff;border:1px solid rgba(139,26,46,0.15);
+  border-radius:18px;padding:clamp(20px,3vw,36px);
+  box-shadow:0 4px 20px rgba(139,26,46,0.08);
+}
+.founder-img{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
+.founder-card h3{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.founder-card .role{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:14px;}
+.founder-card p{font-size:13px;color:var(--text-muted);line-height:1.8;}
+.founder-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.f-badge{background:rgba(139,26,46,0.08);border:1px solid rgba(139,26,46,0.18);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--blue-dim);letter-spacing:0.5px;}
+
+/* ─── FAQ ─────────────────────────────────────────────── */
+.faq-wrap{display:flex;flex-direction:column;gap:12px;margin-top:32px;}
+.faq-item{background:#fff;border:1px solid rgba(139,26,46,0.15);border-radius:14px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;gap:16px;}
+.faq-q h4{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text-dark);}
+.faq-icon{font-size:20px;font-weight:300;color:var(--blue);flex-shrink:0;transition:transform 0.3s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{display:none;padding:0 22px 18px;font-size:14px;color:var(--text-muted);line-height:1.8;border-top:1px solid rgba(139,26,46,0.08);}
+.faq-item.open .faq-body{display:block;}
+
+/* ─── PRICING ─────────────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px;}
+.price-card{
+  background:#fff;border:1px solid rgba(139,26,46,0.15);
+  border-radius:18px;padding:clamp(22px,3vw,36px);
+  position:relative;transition:border-color 0.25s,box-shadow 0.25s,transform 0.25s;
+  box-shadow:0 4px 16px rgba(139,26,46,0.06);
+}
+.price-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(139,26,46,0.14);}
+.price-card.featured{
+  border:2px solid var(--blue);
+  box-shadow:0 8px 40px rgba(139,26,46,0.18);
+  transform:scale(1.03);
+}
+.price-card.featured:hover{transform:scale(1.03) translateY(-4px);}
+.featured-label{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:#fff;padding:4px 18px;border-radius:20px;
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  white-space:nowrap;
+}
+.price-tier{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:8px;}
+.price-title{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px;}
+.price-amount{font-family:var(--display);font-size:clamp(34px,4vw,48px);font-weight:800;color:var(--blue-dark);line-height:1;}
+.price-amount span{font-size:16px;font-weight:500;color:var(--text-muted);}
+.price-desc{font-size:13px;color:var(--text-muted);margin:12px 0 20px;line-height:1.6;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.price-features li{font-size:13px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;}
+.price-features li::before{content:'✓';color:var(--blue);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ─── PROCESS ─────────────────────────────────────────── */
+.process-step{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(30px,5vw,72px);align-items:center;
+  margin-bottom:clamp(56px,8vw,96px);
+}
+.process-step:last-child{margin-bottom:0;}
+.step-num{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:12px;}
+.step-h3{font-family:var(--display);font-size:clamp(22px,2.5vw,32px);font-weight:800;color:var(--text-dark);margin-bottom:16px;line-height:1.2;}
+.step-p{color:var(--text-muted);font-size:15px;line-height:1.8;margin-bottom:18px;}
+.step-img{width:100%;aspect-ratio:16/10;border-radius:16px;border:1px solid rgba(139,26,46,0.15);overflow:hidden;box-shadow:0 8px 32px rgba(139,26,46,0.1);}
+.step-img img{width:100%;height:100%;object-fit:cover;}
+
+/* Image placeholders styled beautifully */
+.img-placeholder{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,#FAE8CC,#F2DFA0,#D4A843);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;color:var(--blue-dark);
+}
+.img-placeholder i{font-size:48px;opacity:0.6;}
+.img-placeholder span{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.7;}
+
+/* ─── CONTACT ─────────────────────────────────────────── */
+.contact-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px;
+}
+.contact-form{
+  background:#fff;border:1px solid rgba(139,26,46,0.15);
+  border-radius:20px;padding:clamp(24px,4vw,40px);
+  box-shadow:0 4px 24px rgba(139,26,46,0.08);
+}
+.contact-form h3{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:6px;}
+.contact-form p{font-size:14px;color:var(--text-muted);margin-bottom:28px;line-height:1.6;}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text-mid);margin-bottom:6px;font-family:var(--mono);letter-spacing:0.5px;text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:12px 16px;border:1.5px solid rgba(139,26,46,0.18);
+  border-radius:10px;font-size:14px;font-family:var(--font);
+  color:var(--text-dark);background:#fff;
+  transition:border-color 0.2s,box-shadow 0.2s;outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(139,26,46,0.1);}
+.form-group textarea{min-height:120px;resize:vertical;}
+.contact-info{display:flex;flex-direction:column;gap:0;}
+.contact-info h3{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:16px;}
+.contact-info p{font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:28px;}
+.contact-detail{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(139,26,46,0.1);}
+.contact-detail .icon{width:44px;height:44px;background:rgba(139,26,46,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;font-size:18px;}
+.contact-detail .text strong{display:block;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px;}
+.contact-detail .text span{font-size:13px;color:var(--text-muted);}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{background:var(--footer-bg);padding:clamp(48px,6vw,80px) 0 0;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-brand{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:14px;}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:20px;}
+.footer-badges{display:flex;flex-wrap:wrap;gap:8px;}
+.footer-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.8);letter-spacing:0.5px;}
+.footer-col-title{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+.footer-col{display:flex;flex-direction:column;gap:10px;}
+.footer-col a{font-size:13px;color:rgba(255,255,255,0.65);cursor:pointer;transition:color 0.2s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom-bar{border-top:1px solid rgba(255,255,255,0.1);padding:20px 0;display:flex;align-items:center;justify-content:space-between;}
+.footer-bottom-bar p{font-size:12px;color:rgba(255,255,255,0.45);font-family:var(--mono);}
+.footer-bottom-bar p span{color:rgba(255,255,255,0.7);}
+.footer-bottom-links{display:flex;gap:20px;}
+.footer-bottom-links a{font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:var(--mono);transition:color 0.2s;}
+.footer-bottom-links a:hover{color:rgba(255,255,255,0.85);}
+
+/* ─── COMPARISON TABLE ───────────────────────── */
+.comp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px;border-radius:16px;border:1px solid rgba(139,26,46,0.15);box-shadow:0 4px 16px rgba(139,26,46,0.06);}
+.comp-table{width:100%;border-collapse:collapse;background:#fff;}
+.comp-table th{background:linear-gradient(135deg,var(--blue-dark),var(--blue-deeper));color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:16px 18px;text-align:left;}
+.comp-table th:first-child{border-radius:16px 0 0 0;}
+.comp-table th:last-child{border-radius:0 16px 0 0;}
+.comp-table td{padding:14px 18px;font-size:13px;color:var(--text-mid);border-bottom:1px solid rgba(139,26,46,0.08);}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:hover td{background:rgba(139,26,46,0.03);}
+.comp-table td:first-child{font-weight:600;color:var(--text-dark);}
+.comp-table .yes{color:#059669;font-weight:700;}
+.comp-table .no{color:#94a3b8;font-weight:500;}
+.comp-table .highlight-col{background:rgba(139,26,46,0.06);}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .btn-demo-nav{display:none;}
+
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero-inner > div:last-child{display:none;}
+  .hero .hero-mini-stats{display:none;}
+
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .platform-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .price-card.featured{transform:scale(1);}
+  .process-step{grid-template-columns:1fr;gap:28px;}
+  .step-img{aspect-ratio:16/9;}
+  .contact-wrap{grid-template-columns:1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .founders-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .footer-bottom-bar{flex-direction:column;align-items:flex-start;gap:10px;}
+  .footer-bottom-links{flex-wrap:wrap;gap:12px;}
+  .section-light [style*="grid-template-columns:1fr 1fr"],
+  .section-alt [style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr !important;
+  }
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important;}
+  .platform-grid[style*="grid-template-columns:repeat(2,1fr)"]{grid-template-columns:1fr !important;}
+  /* Professional Add-Ons: 2-col → 1-col on mobile */
+  .addons-grid{grid-template-columns:1fr !important;}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .hero-mini-stats{flex-direction:column;}
+  .hero-mini-card{min-width:unset;width:100%;}
+  .btn-primary,.btn-secondary,.btn-white{width:100%;justify-content:center;}
+  .footer-bottom-links{flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════ -->
+<nav class="navbar">
+  <a class="nav-logo" onclick="showPage('home')">
+    
+    <div class="nav-logo-text">
+      The RestaurantOS AI
+      <span>Agentic Kitchen Intelligence</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-process" onclick="showPage('process')">Process</button></li>
+    <li><button id="nav-faq" onclick="showPage('faq')">FAQ</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Request Demo</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('process');closeMobile()">Process</button>
+  <button onclick="showPage('faq');closeMobile()">FAQ</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Request Demo →</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : HOME
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          UK's First Agentic Restaurant Operating System
+        </div>
+        <h1>
+          Run Smarter.<br>
+          <span class="blue">Serve</span> Better.
+          <span class="dark-blue">Grow Faster.</span>
+        </h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">
+          The RestaurantOS AI is an all-in-one agentic intelligence platform that helps UK restaurants manage operations, optimise costs, delight customers, and grow profits  all with the power of AI. From kitchen coordination to inventory conversion, we bridge the gap between back-of-house reality and front-of-house demand.
+        </p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Platform Demo</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+        
+      </div>
+      <!-- DASHBOARD -->
+      <div>
+        <div class="score-card">
+          <div class="score-card-top">
+            <div>
+              <div class="score-card-label">The RestaurantOS AI · Live Engine</div>
+              <h3 class="dashboard-title">Kitchen Intelligence Dashboard</h3>
+            </div>
+            <div class="live-dot-wrap"><span class="live-dot"></span>LIVE</div>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">TR</div>
+            <span class="score-lbl">Total Revenue This Month</span>
+            <span class="score-val">£128.4K ↑18.7%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon green-bg">TO</div>
+            <span class="score-lbl">Total Orders</span>
+            <span class="score-val">2,845 ↑16.2%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon light-bg">IH</div>
+            <span class="score-lbl">Inventory Health</span>
+            <span class="score-val">85% Healthy ↑12%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">CS</div>
+            <span class="score-lbl">Customer Satisfaction</span>
+            <span class="score-val">4.7/5 ★ ↑11%</span>
+          </div>
+          <div class="score-big">
+            <div class="score-big-num">3.6<span style="font-size:24px;">x</span></div>
+            <div class="score-big-info">
+              <div class="label">Table Turnover Rate</div>
+              <div class="sub">Agentic Ops · AI Governed · ↑8% vs Last Month</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">The UK Hospitality Crisis</div>
+      <h2 class="section-h2 white">UK Restaurants Are Losing Millions to<br>Operational Blind Spots.</h2>
+      <div class="section-divider divider-white"></div>
+      <p class="para-light" style="max-width:760px;">
+        The UK's 176,685 hospitality businesses face a systemic "triple threat": soaring labour costs, volatile food inflation, and massive inventory inefficiency. Operating margins have been compressed to a perilous 4–5%, with monthly closures exceeding 260. The RestaurantOS AI is the live agentic infrastructure that turns fragmented restaurant data into a coordinated decision layer  protecting margins, reducing waste, and empowering the modern kitchen.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£3.2B</div>
+          <div class="stat-lbl">Annual food waste costs to UK hospitality  75% of which is avoidable with real-time agentic intelligence</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">97%</div>
+          <div class="stat-lbl">Staff turnover rate in UK hospitality, destroying "Service DNA" every time a chef or manager departs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">91%</div>
+          <div class="stat-lbl">Of UK hospitality firms have yet to adopt AI-driven operational tools  massive untapped demand</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£10K+</div>
+          <div class="stat-lbl">Lost margin opportunity per independent outlet annually from informational lag and inventory mismanagement</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <!-- PLATFORM PREVIEW -->
+<section class="platform-section">
+  <div class="container">
+    <div class="label-tag">Core Intelligence Modules</div>
+    <h2 class="section-h2 dark">Six Modules. One Complete Agentic Restaurant OS.</h2>
+    <div class="section-divider divider-blue"></div>
+
+    <p class="para-dark platform-sub">
+      The RestaurantOS AI combines Sales & Revenue intelligence, Kitchen Operations,
+      Inventory Management, Cost Control, Customer Experience, and Performance
+      Analytics into one unified SaaS platform no-code, real-time, data-driven.
+    </p>
+
+    <div class="platform-grid">
+
+      <!-- CARD 1 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap">
+          <img src="res1.jpg"
+               alt="Sales Revenue Dashboard">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 01</div>
+
+          <h3>Sales & Revenue Intelligence</h3>
+
+          <p>
+            AI-driven insights to boost sales and maximise revenue in real time.
+            Track top-selling items, average order values, and gross profit with live dashboards.
+          </p>
+
+          <div class="more-text">
+            The Sales & Revenue module analyses ticket velocity, order source distribution
+            (Dine-in 45%, Takeaway 30%, Delivery 20%, Online 5%), and revenue trends
+            to generate automated recommendations for menu optimisation and upsell
+            opportunities directly linking kitchen decisions to commercial outcomes.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap">
+          <img src="res2.jpg"
+               alt="Kitchen Operations">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 02</div>
+
+          <h3>Kitchen Operations & Agentic Coordination</h3>
+
+          <p>
+            Streamline kitchen workflows and improve efficiency through AI-powered
+            station-level coordination that prevents bottlenecks before they occur.
+          </p>
+
+          <div class="more-text">
+            The Operational Context Graph (OCG) maps dependencies between every kitchen
+            variable from how a high-load dish impacts grill station lag to how
+            weather-driven footfall affects perishable seafood. Service-Time Predictive
+            Analytics (STPA) diagnoses root causes of service failure in real time,
+            enabling agentic interventions during live service.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap">
+          <img src="res3.jpg"
+               alt="Inventory Management">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 03</div>
+
+          <h3>Inventory Management & Waste Reduction</h3>
+
+          <p>
+            Reduce waste and optimise stock in real time. Automatically convert
+            at-risk ingredients into high-margin digital specials before expiration.
+          </p>
+
+          <div class="more-text">
+            The Inventory-to-Demand Conversion engine automatically identifies
+            at-risk chilled inventory and promotes it as specials via the Menu Agent
+            reducing spoilage by an average of 18–22%. Audit-ready compliance with
+            2025 UK Mandatory Food Waste Separation laws is built in.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+  <!-- WHY SECTION -->
+  <section class="why-section">
+    <div class="container">
+      <div class="label-tag">Why RestaurantOS AI</div>
+      <h2 class="section-h2 dark">Built for the Agentic Era.<br>Not Just a Dashboard with an AI Badge.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-robot"></i></div>
+          <h4>Live Agentic Coordination</h4>
+          <p>Moves beyond passive dashboards to a live decision layer that connects Menu, Kitchen, and Inventory agents in a synchronised negotiation loop  acting rather than just reporting.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-dna"></i></div>
+          <h4>Service DNA Preservation</h4>
+          <p>Captures proprietary "Operational DNA" lost to the sector's 97% staff turnover. When a head chef leaves, their coordination logic stays permanently encoded in the platform.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Margin Protection Engine</h4>
+          <p>The Menu Behavior Control Layer identifies exactly where service efficiency breaks down and provides automated remediation  protecting margins against rising UK labour costs.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-plug"></i></div>
+          <h4>Middleware Agnostic Integration</h4>
+          <p>Built to sit above any legacy hardware (Lightspeed, Square, Zonal, Toast, OpenTable)  operators are never locked into a single ecosystem as they expand.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-leaf"></i></div>
+          <h4>ESG & Net Zero Aligned</h4>
+          <p>Generates audit-ready food waste reports, aligning with 2025 UK Net Zero targets. Reduces CO₂ emissions linked to the 1.1 million tonnes of food discarded annually by UK hospitality.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-pound-sign"></i></div>
+          <h4>SME-Optimised Pricing</h4>
+          <p>Tiered SaaS from £50/month  giving independent UK restaurants enterprise-level agentic intelligence without the cost of proprietary hardware or dedicated data science teams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : ABOUT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="label-tag">About Us</div>
+      <h2 class="section-h2 dark">Built by a Chef Who Lived the Problem.<br><span style="color:var(--blue-dark);">Designed for the Agentic Era.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The RestaurantOS AI is a UK-based SaaS venture founded by Sandeep Dagar  combining 15+ years of premium culinary expertise with a Master in Management from Manchester Metropolitan University to solve the most pressing challenge facing UK hospitality today: the "Informational Lag" that costs the sector billions in wasted food, lost margin, and operational burnout.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Get in Touch</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision & Mission -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Vision & Mission</div>
+      <h2 class="section-h2 dark">To Be the Global Standard for<br>Agentic-Ops in Professional Kitchens.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px;">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-eye"></i></div>
+          <h4>Our Vision</h4>
+          <p>We aspire to be the global standard for "Agentic-Ops" in professional kitchens  fostering a future in which service-time behaviour is automatically optimised for both throughput and margin, ensuring continuous inventory conversion and zero-gap operational efficiency.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h4>Our Mission</h4>
+          <p>To enable UK hospitality operators to move from "reactive firefighting" to "agentic orchestration" by leveraging a live operational decision layer that synchronises kitchen capacity with menu demand and protects institutional culinary memory.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="label-tag">Core Values</div>
+      <h2 class="section-h2 dark">What Drives Everything We Build</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lightbulb"></i></div>
+          <h4>Innovation</h4>
+          <p>Continuous refinement of agentic coordination models and the Operational Context Graph to stay ahead of shifting UK labour costs and demand volatility.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-crosshairs"></i></div>
+          <h4>Accuracy</h4>
+          <p>A commitment to high-fidelity service-time diagnostics and the elimination of "Informational Lag" in kitchen-to-menu synchronisation.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lock"></i></div>
+          <h4>Sovereignty</h4>
+          <p>Empowering independent restaurants to own their operational service logic as a proprietary and permanent digital business asset.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-tachometer-alt"></i></div>
+          <h4>Efficiency</h4>
+          <p>Making complex, high-pressure service sessions manageable through machine-executable Section-Level pathways and system-agnostic integrations.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-hands-helping"></i></div>
+          <h4>Stewardship</h4>
+          <p>Equipping head chefs and owners with the automated foresight needed to protect margins and reduce waste without increasing staff cognitive load.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-globe"></i></div>
+          <h4>ESG Impact</h4>
+          <p>Reducing UK hospitality food waste carbon emissions by 20–30% per institution through agentic menu control and Inventory-to-Demand optimisation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Founder</div>
+      <h2 class="section-h2 dark">The Person Behind<br>RestaurantOS AI</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="founders-grid">
+        <div class="founder-card">
+          <div class="founder-img">SD</div>
+          <h3>Sandeep Dagar</h3>
+          <div class="role">Founder & CEO · Managing Director</div>
+          <p>Sandeep Dagar possesses 15+ years of premium culinary experience and advanced management training, creating a unique "founder–problem–market fit" to lead The RestaurantOS AI in the UK. As a seasoned Chef de Partie at prestigious UK groups like San Carlo and Piccolino (Individual Restaurants), he has an intimate understanding of the "Service-Time Decision Window"  the critical 15-minute period where operational coordination determines shift profitability.<br><br>His culinary mastery forms the practical backbone of the platform. Having managed grill and prep sections at busy venues like Tru Street (Trafford Centre) and Pizza Box, Sandeep understands the specific "Informational Lag" where back-of-house capacity is disconnected from front-of-house demand. At RestaurantOS AI, he leads development of the Restaurant Operational Ontology (ROO) and the agentic negotiation logic, converting professional kitchen intuition into actionable machine code.</p>
+          <div class="founder-badges">
+            <span class="f-badge">Master in Management · MMU</span>
+            <span class="f-badge">Chef de Partie · San Carlo</span>
+            <span class="f-badge">Chef de Partie · Piccolino</span>
+            <span class="f-badge">15+ Years Culinary Expertise</span>
+            <span class="f-badge">Agentic Kitchen Intelligence</span>
+          </div>
+        </div>
+        <div class="founder-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <h4 style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:16px;">Deep Domain Synergy</h4>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:20px;">While traditional Hospitality-Tech startups are often led by generalist software developers, Sandeep unifies the worlds of Gastronomy and Management Science. This background equips him with a hands-on understanding of how to link technical station metrics (like ticket velocity) to commercial outcomes (like table turnover).</p>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="contact-detail" style="border:none;padding:12px 0;">
+                <div class="icon"><i class="fas fa-star"></i></div>
+                <div class="text"><strong>Evidence-Based Strategy</strong><span>Direct exposure to financial consequences of operational failure through managing peak service sessions at San Carlo and Piccolino.</span></div>
+              </div>
+              <div class="contact-detail" style="border:none;padding:12px 0;">
+                <div class="icon"><i class="fas fa-brain"></i></div>
+                <div class="text"><strong>Complex Service Logic</strong><span>Practical understanding of kitchen stressors and station-level dependencies through extensive career as Chef de Partie.</span></div>
+              </div>
+              <div class="contact-detail" style="border:none;padding:12px 0;">
+                <div class="icon"><i class="fas fa-rocket"></i></div>
+                <div class="text"><strong>Strategic Innovation Focus</strong><span>Converts culinary intuition into structured data, ensuring the platform's "Service DNA" is grounded in professional operational accountability.</span></div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top:24px;" onclick="showPage('contact')">Connect with Sandeep →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page about -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : PLATFORM
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <section style="background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 60%,#F2DFA0 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Full Platform</div>
+      <h2 class="section-h2 dark">Six Intelligence Modules.<br><span style="color:var(--blue-dark);">One Agentic Restaurant Command Centre.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">Every feature is built specifically for the high-pressure UK hospitality environment  not retrofitted from generic SaaS tools. Our proprietary Operational Context Graph and multi-agent coordination translate complex kitchen behaviours into actionable commercial KPIs that operators actually need.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- All 6 Modules -->
+<section class="section-light">
+  <div class="container">
+
+    <div class="platform-grid" style="grid-template-columns:repeat(2,1fr);gap:28px;">
+
+      <!-- CARD 1 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap" style="height:220px;">
+          <img src="res4.jpg"
+               alt="Sales Revenue AI"
+               style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 01 · Sales & Revenue</div>
+
+          <h3>AI-Driven Sales & Revenue Intelligence</h3>
+
+          <p>
+            Real-time revenue dashboards tracking total sales (£128.4K/month ↑18.7%),
+            order velocity, average order value (£45.18), and gross profit (32.6%)
+            all linked to agentic menu interventions.
+          </p>
+
+          <div class="more-text">
+            The Sales & Revenue module integrates with your POS to surface top-selling
+            items (Margherita Pizza: 1,246 | Paneer Tikka: 982 | Veg Biryani: 875),
+            order source breakdown, and revenue trends. Automated weekly forecasts
+            alert managers to emerging opportunities before the weekend rush turning
+            data into proactive margin protection.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap" style="height:220px;">
+          <img src="res5.jpg"
+               alt="Kitchen Operations"
+               style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 02 · Kitchen Ops</div>
+
+          <h3>Kitchen Operations & Multi-Agent Coordination</h3>
+
+          <p>
+            The Operational Context Graph (OCG) maps every kitchen variable from
+            grill station capacity to ingredient expiry enabling real-time agentic
+            interventions that prevent service bottlenecks 15–20 minutes before
+            they occur.
+          </p>
+
+          <div class="more-text">
+            When order volume surges, the Kitchen Agent automatically "throttles"
+            high-labour dishes on the digital menu while promoting high-margin,
+            low-load alternatives that utilise at-risk chilled ingredients.
+            The Agentic Negotiation Protocol (ANP) resolves 85% of routine service
+            conflicts without human intervention.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap" style="height:220px;">
+          <img src="res6.jpg"
+               alt="Inventory Management"
+               style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 03 · Inventory</div>
+
+          <h3>Smart Inventory Management & Waste Conversion</h3>
+
+          <p>
+            Real-time inventory health monitoring (85% healthy ↑12%) with automated
+            "at-risk" ingredient detection and digital specials generation reducing
+            spoilage by 18–22% on average.
+          </p>
+
+          <div class="more-text">
+            The Inventory-to-Demand Conversion engine continuously scans stock
+            expiry windows. When "at-risk" chilled ingredients are detected,
+            the Menu Agent automatically creates a high-margin special,
+            cross-checks kitchen capacity, and promotes it on digital channels
+            turning potential waste directly into revenue.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap" style="height:220px;">
+          <img src="res7.jpg"
+               alt="Cost Control"
+               style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 04 · Cost Control</div>
+
+          <h3>Cost Control & Margin Protection</h3>
+
+          <p>
+            Track costs, reduce leakage, and improve profitability with AI-driven
+            cost forensics that identify where your labour-to-load ratio is
+            misaligned and where menu mix is eroding margins.
+          </p>
+
+          <div class="more-text">
+            The Closed-Loop Operational Outcome Model generates comprehensive
+            Service Performance Reports linking every automated AI intervention
+            to financial margin protection. UK-specific tuning for 2025 National
+            Insurance hikes and minimum wage increases ensures operators see
+            exactly how agentic coordination protects their bottom line.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap" style="height:220px;">
+          <img src="res8.jpg"
+               alt="Customer Experience"
+               style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 05 · Customer Experience</div>
+
+          <h3>Customer Experience & Personalisation Engine</h3>
+
+          <p>
+            Personalised service that keeps customers coming back. Customer
+            satisfaction score: 4.7/5 ↑11%. The platform links dine-in behaviour
+            patterns to menu optimisation recommendations.
+          </p>
+
+          <div class="more-text">
+            By synchronising reservation flow, order history, and real-time
+            kitchen capacity, the Customer Experience module ensures guests
+            are never seated into an overwhelmed kitchen. Dynamic wait-time
+            predictions, personalised upsell recommendations, and post-visit
+            feedback loops create a loyalty engine powered by operational
+            intelligence.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="platform-card">
+        <div class="platform-img-wrap" style="height:220px;">
+          <img src="res9.jpg"
+               alt="Performance Analytics"
+               style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
+        <div class="inner">
+          <div class="element-badge">Module 06 · Analytics</div>
+
+          <h3>Real-Time Performance Analytics & Reporting</h3>
+
+          <p>
+            Real-time dashboards that make smarter decisions possible.
+            Service-Time Predictive Analytics (STPA) diagnoses root causes
+            of service drift enabling margin protection before the financial
+            loss occurs.
+          </p>
+
+          <div class="more-text">
+            The Federated Restaurant Logic Network (FRLN) enables anonymised
+            benchmarking across UK hospitality sites so trends from high-efficiency
+            London Italian groups can improve a Manchester independent bistro's
+            "Menu-to-Kitchen" strategy, creating collective intelligence that
+            individual operators could never achieve alone.
+          </div>
+
+          <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+        </div>
+      </div>
+
+    </div>
+
+      <!-- Competitor Comparison -->
+      <div style="margin-top:60px;">
+        <div class="label-tag">Competitor Analysis</div>
+        <h2 class="section-h2 dark" style="margin-bottom:8px;">How The RestaurantOS AI Compares</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:700px;margin-bottom:0;">The RestaurantOS AI is the only platform combining live agentic coordination, real-time Menu-Kitchen synchronisation, and UK-specific operational intelligence in a single SME-optimised SaaS.</p>
+        <div class="comp-table-wrap">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Feature / Capability</th>
+                <th>Legacy POS (Zonal/Oracle)</th>
+                <th>Niche Waste (Winnow)</th>
+                <th>Labour Tools (7shifts)</th>
+                <th>Manual Ops</th>
+                <th style="background:var(--blue);">RestaurantOS AI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Live Agentic Coordination</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Multi-Agent Logic</td></tr>
+              <tr><td>Menu-Kitchen Real-time Sync</td><td class="no">Passive data only</td><td class="no">No</td><td class="no">No</td><td class="no">Verbal only</td><td class="yes highlight-col">✓ Real-time throttling</td></tr>
+              <tr><td>Service-Time Decision Window</td><td class="no">Post-service reports</td><td class="no">Post-mortem only</td><td class="no">Scheduling only</td><td class="no">Reactive</td><td class="yes highlight-col">✓ Active intervention</td></tr>
+              <tr><td>Inventory-to-Demand Engine</td><td class="no">Manual specials</td><td class="no">Manual logging</td><td class="no">No</td><td class="no">Subjective</td><td class="yes highlight-col">✓ Automated conversion</td></tr>
+              <tr><td>Operational Context Graph</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Proprietary OCG</td></tr>
+              <tr><td>Federated Logic Network</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Sector-wide insights</td></tr>
+              <tr><td>UK 2025 Economic Tuning</td><td class="no">Limited</td><td class="no">Global-centric</td><td class="no">General</td><td class="no">None</td><td class="yes highlight-col">✓ NI/Wage focused</td></tr>
+              <tr><td>Cost Structure</td><td class="no">High CapEx</td><td class="no">Subscription</td><td class="no">Seat-based</td><td class="no">Time-intensive</td><td class="yes highlight-col">✓ SME-optimised SaaS</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page platform -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : MARKET
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-market">
+  <section style="background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 50%,#F2DFA0 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 dark">A £85 Billion Sector in Crisis.<br><span style="color:var(--blue-dark);">The RestaurantOS AI is the Solution.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The UK foodservice sector is valued at approximately £85 billion, contributing 3.5% to national GDP. Yet 99.6% of the 176,685 businesses are SMEs operating on 4–5% margins, with monthly closures exceeding 260. The RestaurantOS AI targets this underserved segment with affordable, retrofit-ready agentic infrastructure.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Market Data & Intelligence</div>
+      <h2 class="section-h2 dark">The Numbers Behind the Opportunity</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>UK Hospitality Market by Segment (SAM £M)</h4>
+          <p>Target addressable market across UK culinary hubs and hospitality types</p>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Key Operational Pain Points  UK Hospitality Leaders</h4>
+          <p>Primary challenges driving adoption of RestaurantOS AI</p>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>The RestaurantOS AI vs Competitors  Capability Radar</h4>
+          <p>Platform capabilities vs. existing market alternatives</p>
+          <div class="chart-wrap"><canvas id="chartRadar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Global AI Restaurant Management Market Growth 2022–2030</h4>
+          <p>Global market growth (USD B) + UK AI adoption trajectory (%)</p>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+      </div>
+      <div class="charts-grid" style="grid-template-columns:1fr;margin-top:32px;">
+        <div class="chart-card">
+          <h4>Platform Feature Comparison  The RestaurantOS AI vs Market Average</h4>
+          <p>Capability scores across key operational intelligence dimensions (out of 100)</p>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Projections -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">Financial Projections</div>
+      <h2 class="section-h2 white">3-Year Revenue Trajectory</h2>
+      <div class="section-divider divider-white"></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£67K</div>
+          <div class="stat-lbl">Year 1 Revenue · 75 active clients · Manchester & London pilots · SaaS + Context Bridge fees</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£331K</div>
+          <div class="stat-lbl">Year 2 Revenue · 50–100 locations · Full UK launch · £49K net profit · POS/KDS integrations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£669K</div>
+          <div class="stat-lbl">Year 3 Revenue · 200+ UK firms · £121K net profit · UAE/USA pilots · FRLN scaling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">20+</div>
+          <div class="stat-lbl">High-value UK-based AI and operations roles created by Year 5 at platform maturity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page market -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PROCESS
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-process">
+  <section style="background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 50%,#F2DFA0 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">How It Works</div>
+      <h2 class="section-h2 dark">From Reactive Firefighting<br>to <span style="color:var(--blue-dark);">Agentic Kitchen Orchestration</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The RestaurantOS AI operates as a closed-loop operational intelligence lifecycle  capturing, diagnosing, intervening, and continuously evolving your restaurant's service logic, so every kitchen decision is grounded in real agentic intelligence, not guesswork or reactive firefighting.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request a Demo →</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Modules</button>
+      </div>
+    </div>
+  </section>
+
+  
+<section class="section-light" style="padding-top:clamp(60px,8vw,96px);">
+  <div class="container">
+
+    <div class="label-tag">The 6-Phase Agentic Intelligence Lifecycle</div>
+
+    <h2 class="section-h2 dark">
+      A Complete Operational Intelligence Loop Not Just a Dashboard
+    </h2>
+
+    <div class="section-divider divider-blue"></div>
+
+    <!-- Phase 1 -->
+    <div class="process-step">
+
+      <div>
+        <div class="step-num">Phase 01 · Assess</div>
+
+        <h3 class="step-h3">
+          Establish Your Service DNA Baseline
+        </h3>
+
+        <p class="step-p">
+          The RestaurantOS AI ingests your brand data menu items,
+          station capacity, staff skill-mix, supplier lead times
+          to build a comprehensive "Restaurant Operational
+          Ontology (ROO)." Then runs your first set of
+          operational diagnostics to establish baseline
+          Service-Time and Inventory Health scores.
+        </p>
+
+        <p class="step-p">
+          The Assessment phase surfaces the hidden cost
+          of unmanaged kitchen coordination giving you
+          a precise, data-driven view of your
+          "Informational Lag" before any strategy is deployed.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            Automated ROO Setup
+          </span>
+
+          <span class="risk-badge risk-light">
+            <span class="risk-dot"></span>
+            Baseline Service DNA Report
+          </span>
+
+          <span class="risk-badge risk-green">
+            <span class="risk-dot"></span>
+            Zero Code Required
+          </span>
+        </div>
+      </div>
+
+      <div class="step-img">
+        <img src="res10.jpg"
+             alt="Assess Restaurant Operations"
+             style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="process-step">
+
+      <div class="step-img">
+        <img src="res11.jpg"
+             alt="Monitor Kitchen Operations"
+             style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+
+      <div>
+        <div class="step-num">Phase 02 · Monitor</div>
+
+        <h3 class="step-h3">
+          Real-Time Kitchen & Inventory Monitoring
+        </h3>
+
+        <p class="step-p">
+          The Monitoring Engine ingests live signals from your
+          POS and KDS tracking ticket velocity, station-level lag,
+          inventory depletion rates, and reservation flow on a
+          continuous basis. Automated alerts flag at-risk
+          situations the moment they emerge.
+        </p>
+
+        <p class="step-p">
+          Think of it as a 24/7 operations manager watching
+          every kitchen signal objective, continuous,
+          and immediately actionable.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            Live Kitchen Dashboard
+          </span>
+
+          <span class="risk-badge risk-light">
+            <span class="risk-dot"></span>
+            Automated Service Alerts
+          </span>
+
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            POS/KDS Integration
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="process-step">
+
+      <div>
+        <div class="step-num">Phase 03 · Diagnose</div>
+
+        <h3 class="step-h3">
+          Service-Time Delta Diagnostics Catch Bottlenecks Before They Cost You
+        </h3>
+
+        <p class="step-p">
+          The STDA engine cross-checks actual ticket velocity
+          against expected prep-time benchmarks. Station congestion?
+          Delivery dwell? Ingredient depletion? The STDA catches
+          them all and automatically deconstructs the change into
+          a structured "Manager Copilot Report" with one-click
+          approval options.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <span class="risk-badge risk-green">
+            <span class="risk-dot"></span>
+            Automated Bottleneck Detection
+          </span>
+
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            Manager Copilot Reports
+          </span>
+        </div>
+      </div>
+
+      <div class="step-img">
+        <img src="res12.jpg"
+             alt="Diagnose Restaurant Bottlenecks"
+             style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="process-step">
+
+      <div class="step-img">
+        <img src="res13.jpg"
+             alt="Agentic Intervention"
+             style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+
+      <div>
+        <div class="step-num">Phase 04 · Intervene</div>
+
+        <h3 class="step-h3">
+          Agentic Intervention Menu Throttling & Inventory Conversion
+        </h3>
+
+        <p class="step-p">
+          When a surge is detected, the Menu Behavior Control Layer
+          automatically "throttles" high-labour dishes while promoting
+          high-margin, low-load alternatives using at-risk chilled ingredients.
+          The Agentic Negotiation Protocol resolves 85% of service conflicts
+          without human intervention.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            Automated Menu Throttling
+          </span>
+
+          <span class="risk-badge risk-light">
+            <span class="risk-dot"></span>
+            Inventory-to-Special Conversion
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="process-step">
+
+      <div>
+        <div class="step-num">Phase 05 · Benchmark</div>
+
+        <h3 class="step-h3">
+          Federated Service Benchmarking Learn From the Best
+        </h3>
+
+        <p class="step-p">
+          The FRLN enables anonymised "Service DNA" benchmarks
+          from UK hospitality sites to improve predictive models
+          continuously. Trends from high-efficiency London restaurant
+          groups can inform a Manchester bistro's kitchen strategy
+          without revealing sensitive commercial data.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            Sector-Wide Efficiency Insights
+          </span>
+
+          <span class="risk-badge risk-green">
+            <span class="risk-dot"></span>
+            Privacy-Safe Benchmarking
+          </span>
+        </div>
+      </div>
+
+      <div class="step-img">
+        <img src="res14.jpg"
+             alt="Federated Restaurant Benchmarking"
+             style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+
+    </div>
+
+    <!-- Phase 6 -->
+    <div class="process-step">
+
+      <div class="step-img">
+        <img src="res15.jpg"
+             alt="Performance Reporting"
+             style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+
+      <div>
+        <div class="step-num">Phase 06 · Report</div>
+
+        <h3 class="step-h3">
+          KPI-Style Reporting From Operational Data to Strategic Decisions
+        </h3>
+
+        <p class="step-p">
+          Every insight is delivered as a prioritised,
+          KPI-style Service Performance Report not raw
+          data exports. Kitchen teams receive Service-Time
+          Scores, Inventory Health metrics, Margin-at-Risk
+          alerts, and ranked action items ready for
+          immediate deployment.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <span class="risk-badge risk-blue">
+            <span class="risk-dot"></span>
+            Service & Margin Scores
+          </span>
+
+          <span class="risk-badge risk-light">
+            <span class="risk-dot"></span>
+            Audit-Ready Compliance Reports
+          </span>
+
+          <span class="risk-badge risk-green">
+            <span class="risk-dot"></span>
+            Prioritised Action Items
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+    </div>
+  </section>
+</div><!-- end page process -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : FAQ
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-faq">
+  <section style="background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 60%,#F2DFA0 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">FAQ</div>
+      <h2 class="section-h2 dark">Frequently Asked Questions</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">Everything you need to know about The RestaurantOS AI and what it means for your restaurant's operational efficiency in the agentic era.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container" style="max-width:840px;">
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is The RestaurantOS AI and why does my restaurant need it?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">The RestaurantOS AI is an AI-based infrastructure platform that solves the systemic operational crisis facing UK hospitality  specifically the "Informational Lag" where real-time kitchen capacity, inventory risk, and labour stress are disconnected from front-of-house demand. Unlike standard POS or inventory systems that serve as passive data repositories, The RestaurantOS AI establishes a "Live Operational Decision Layer" that synchronises kitchen load, inventory risk, and front-end menu behaviour in real time. Pilot validations have demonstrated 25–40% reduction in ticket lag and 18% reduction in inventory waste.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How is this different from traditional POS or inventory management systems?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Traditional POS and inventory tools serve as passive data silos  they record what happened, but cannot act on what is happening. The RestaurantOS AI operates at the "live service window"  the agentic layer that intervenes in real time to throttle menus, convert inventory, and coordinate kitchen teams during peak surges. The platform is architecturally incapable of being replicated by legacy POS tools, which lack the cross-functional logic to link kitchen load to menu availability during a live Saturday night service.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Which existing systems does The RestaurantOS AI integrate with?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">The RestaurantOS AI is built as middleware-agnostic infrastructure  it sits above any underlying legacy hardware including Lightspeed, Square, Toast, Zonal, and OpenTable. The platform connects via secure "Operational Context Bridge" nodes (£600 one-off setup) that capture live signals from existing POS and KDS systems without requiring a full technology replacement. Integration is typically completed within hours, not weeks.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is "Service DNA" and why does preserving it matter?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Service DNA is the proprietary operational logic that experienced head chefs and managers carry in their heads  knowing when to throttle the grill section, which specials convert in which service windows, and how to coordinate a team under peak pressure. With a 97% staff turnover rate in UK hospitality, this knowledge is permanently lost every time a senior team member departs. The RestaurantOS AI captures and encodes this institutional intelligence into machine-executable "Decision Objects," ensuring new staff can reach proficiency in 14 days instead of 45.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Is The RestaurantOS AI compliant with UK food safety and data regulations?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Yes. The RestaurantOS AI is architecturally designed to comply with UK GDPR, ICO guidance on AI and Data Protection, and the UK's Principles-Based AI Framework (DSIT). The platform provides audit-ready food waste reporting aligned with the 2025 Mandatory Food Waste Separation laws and Net Zero targets. Secure Context Bridge Nodes ensure sensitive operational data  including staff performance metrics and inventory velocities  is captured without compromising privacy standards.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What sectors and restaurant types does The RestaurantOS AI serve?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">The RestaurantOS AI is purpose-built for UK independent premium restaurants, boutique hospitality groups, dark kitchens, and QSRs  the 176,000+ SME operators underserved by expensive enterprise automation. The platform is particularly powerful for multi-site boutique franchises needing unified cross-site Service DNA, and for SME operators where the founder is the primary source of operational logic and needs to clone their expertise to scale reliably.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How do I get started with RestaurantOS AI?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Getting started is simple  no code required. After selecting your plan (from £50/month), you complete a Service DNA setup session (approximately 60 minutes) where you input your operational data and station configurations. Secure Context Bridge Nodes are then installed at your venue to connect existing POS and KDS systems. Your first Kitchen Intelligence Dashboard goes live within 24–48 hours, and our Restaurant Success team guides you through the onboarding process to ensure you extract maximum value from day one.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page faq -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : PRICING
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-pricing">
+  <section style="background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 60%,#F2DFA0 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container" style="text-align:center;">
+      <div class="label-tag" style="justify-content:center;">Pricing</div>
+      <h2 class="section-h2 dark">Simple, Transparent Plans<br>for Every Restaurant Size</h2>
+      <div class="section-divider divider-blue divider-center"></div>
+      <p class="para-dark" style="max-width:580px;margin:0 auto;">From independent boutique bistros to national restaurant groups  The RestaurantOS AI has a plan designed for your operational intelligence needs. SME-optimised pricing starting from just £50/month.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Starter</div>
+          <div class="price-title">Starter Plan</div>
+          <div class="price-amount">£50<span>/mo</span></div>
+          <p class="price-desc">For independent boutique bistros and dark kitchens needing core service-time monitoring and station load visibility.</p>
+          <ul class="price-features">
+            <li>Basic service-time monitoring</li>
+            <li>Station load visibility</li>
+            <li>Framework-agnostic mapping (1 station type)</li>
+            <li>Inventory health dashboard</li>
+            <li>Standard POS integration</li>
+            <li>Monthly Service DNA report</li>
+            <li>Standard onboarding support</li>
+          </ul>
+          <button class="btn-secondary" onclick="showPage('contact')">Get Started</button>
+        </div>
+        <div class="price-card featured">
+          <div class="featured-label">Most Popular</div>
+          <div class="price-tier">Professional</div>
+          <div class="price-title">Professional Plan</div>
+          <div class="price-amount">£150<span>/mo</span></div>
+          <p class="price-desc">For high-volume boutique groups and Trafford Centre-style sites needing full multi-agent coordination and menu-kitchen negotiation logic.</p>
+          <ul class="price-features">
+            <li>Full Multi-Agent Coordination</li>
+            <li>Menu-Kitchen Negotiation Logic</li>
+            <li>POS/KDS integrations</li>
+            <li>STDA validation engine</li>
+            <li>Inventory-to-Demand conversion</li>
+            <li>Manager Copilot interface</li>
+            <li>Weekly Service DNA reports</li>
+            <li>Priority Restaurant Success support</li>
+          </ul>
+          <button class="btn-primary" onclick="showPage('contact')">Start Free Trial</button>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <div class="price-title">Enterprise Plan</div>
+          <div class="price-amount">£300<span>/mo</span></div>
+          <p class="price-desc">For regional/national groups and multi-site franchises needing custom OCG, FRLN access, and dedicated Restaurant Success management.</p>
+          <ul class="price-features">
+            <li>Custom Operational Context Graph</li>
+            <li>Context Bridge Nodes included</li>
+            <li>FRLN sector-wide access</li>
+            <li>Dedicated Restaurant Success Manager</li>
+            <li>Multi-site Service DNA benchmarking</li>
+            <li>Audit-ready compliance reports</li>
+            <li>API licensing capabilities</li>
+            <li>Priority onboarding & training</li>
+          </ul>
+          <button class="btn-secondary" onclick="showPage('contact')">Contact Us</button>
+        </div>
+      </div>
+
+      <!-- Add-ons -->
+      <div style="margin-top:60px;">
+        <div class="label-tag">Professional Add-Ons</div>
+        <h3 style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Additional Services</h3>
+        <div class="section-divider divider-blue"></div>
+        <div class="addons-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:32px;">
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-plug"></i></div>
+            <h4>Operational Context Bridge</h4>
+            <p>Retrofit installation of OCG nodes and legacy POS hardware connectors. One-off setup fee of <strong style="color:var(--blue-dark);">£600 per site</strong> for initial hardware/API configuration.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-search-dollar"></i></div>
+            <h4>Service DNA Audit</h4>
+            <p>Specialised section-level load validation and Agentic Logic Onboarding. Onboarding fee of <strong style="color:var(--blue-dark);">£500</strong> based on Menu/Station complexity.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-chart-network"></i></div>
+            <h4>Premium Ops Reports</h4>
+            <p>Advanced sector benchmarking and "Service-Time Equity" growth insights. Annual Insights Subscription: <strong style="color:var(--blue-dark);">£1,500–£4,000</strong> per institution.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-globe"></i></div>
+            <h4>International Expansion Support</h4>
+            <p>Platform configuration for UAE, USA, and Singapore markets including regional labour compliance modules and local POS stack mapping. <strong style="color:var(--blue-dark);">Custom pricing.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page pricing -->
+
+<!-- CONTACT SECTION -->
+<div class="page" id="page-contact">
+
+  <section style="background:linear-gradient(140deg,#FDF6EC 0%,#FAE8CC 60%,#F2DFA0 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Contact & Demo</div>
+
+      <h2 class="section-h2 dark">
+        Request a Demo or<br>
+        <span style="color:var(--blue-dark);">
+          Join Our Pilot Programme
+        </span>
+      </h2>
+
+      <div class="section-divider divider-blue"></div>
+
+      <p class="para-dark" style="max-width:600px;">
+        Our personalised demos show your restaurant's actual
+        Service-Time scores and Kitchen Intelligence dashboard
+        live, in real time.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+
+      <div class="contact-wrap">
+
+        <!-- CONTACT FORM -->
+        <div class="contact-form">
+
+          <h3>Book Your Platform Demo</h3>
+
+          <p>
+            Fill in your details and our Restaurant Success team
+            will contact you within 24 hours.
+          </p>
+
+          <!-- WEB3FORMS FORM -->
+          <form action="https://api.web3forms.com/submit" method="POST">
+
+            <!-- ACCESS KEY -->
+            <input 
+              type="hidden" 
+              name="access_key" 
+              value="3aeaac9a-d5d7-43f1-b5ae-855f0463c098"
+            >
+
+            <!-- SUBJECT -->
+            <input 
+              type="hidden" 
+              name="subject" 
+              value="New RestaurantOS AI Demo Request"
+            >
+
+            <!-- FROM NAME -->
+            <input 
+              type="hidden" 
+              name="from_name" 
+              value="RestaurantOS AI Website"
+            >
+
+            <!-- OPTIONAL REDIRECT -->
+            <!--
+            <input 
+              type="hidden" 
+              name="redirect" 
+              value="https://yourdomain.com/thank-you.html"
+            >
+            -->
+
+            <!-- NAME -->
+            <div class="form-group">
+              <label>Full Name *</label>
+
+              <input 
+                type="text" 
+                name="name"
+                placeholder="Your full name"
+                required
+              >
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group">
+              <label>Email Address *</label>
+
+              <input 
+                type="email" 
+                name="email"
+                placeholder="your@restaurant.co.uk"
+                required
+              >
+            </div>
+
+            <!-- PHONE -->
+            <div class="form-group">
+              <label>Phone Number</label>
+
+              <input 
+                type="tel" 
+                name="phone"
+                placeholder="+44 7XXX XXXXXX"
+              >
+            </div>
+
+            <!-- RESTAURANT -->
+            <div class="form-group">
+              <label>Restaurant / Group Name</label>
+
+              <input 
+                type="text" 
+                name="restaurant_name"
+                placeholder="Your restaurant or hospitality group name"
+              >
+            </div>
+
+            <!-- BUSINESS TYPE -->
+            <div class="form-group">
+              <label>Business Type</label>
+
+              <select name="business_type">
+
+                <option>
+                  Independent Premium Restaurant
+                </option>
+
+                <option>
+                  Multi-Site Boutique Group
+                </option>
+
+                <option>
+                  Dark Kitchen / QSR
+                </option>
+
+                <option>
+                  Boutique Franchise
+                </option>
+
+                <option>
+                  Hotel / Hospitality Group
+                </option>
+
+                <option>
+                  Other
+                </option>
+
+              </select>
+            </div>
+
+            <!-- MESSAGE -->
+            <div class="form-group">
+              <label>
+                What are you most interested in?
+              </label>
+
+              <textarea 
+                name="message"
+                placeholder="Tell us about your operational challenges, kitchen systems, or the features you'd like to explore..."
+                required
+              ></textarea>
+            </div>
+
+            <!-- SUBMIT -->
+            <button 
+              class="btn-primary"
+              style="width:100%;justify-content:center;"
+              type="submit"
+            >
+              Request Demo →
+            </button>
+
+          </form>
+
+        </div>
+
+        <!-- CONTACT INFO -->
+        <div class="contact-info">
+
+          <h3>Why Book a Demo?</h3>
+
+<p>
+  Our personalised demos show your restaurant's
+  actual Service-Time baseline, Kitchen Intelligence
+  dashboard, and Inventory Health scores using your
+  real operational context not generic examples or
+  static presentations. We demonstrate how the
+  Operational Context Graph (OCG), Service-Time
+  Predictive Analytics (STPA), and Agentic Coordination
+  engine work together to reduce kitchen bottlenecks,
+  improve ticket velocity, protect margins, and convert
+  at-risk inventory into revenue opportunities in real time.
+  Every demo is tailored to your restaurant's workflow,
+  menu structure, and operational challenges.
+
+
+
+          <div class="contact-detail">
+            <div class="icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="text">
+              <strong>Email Us</strong>
+              <span>therestaurantosaiuk@outlook.com</span>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <div class="icon">
+              <i class="fas fa-phone"></i>
+            </div>
+
+            <div class="text">
+              <strong>Phone</strong>
+              <span>+44 7767 178588 · Sandeep Dagar</span>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <div class="icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+
+            <div class="text">
+              <strong>UK Headquarters</strong>
+              <span>
+                Manchester & London, United Kingdom
+              </span>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <div class="icon">
+              <i class="fas fa-clock"></i>
+            </div>
+
+            <div class="text">
+              <strong>Response Time</strong>
+              <span>
+                Within 24 hours · Mon–Fri 9am–6pm GMT
+              </span>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <div class="icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+
+            <div class="text">
+              <strong>Data Privacy</strong>
+              <span>
+                UK GDPR · ICO Registered · OCG Secured
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">RestaurantOS AI</div>
+        <p class="footer-desc">The UK's first Agentic Restaurant Operating System  measuring, managing, and optimising every kitchen operation in real time. Run Smarter. Serve Better. Grow Faster. Sync Service. Secure Margin.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">UK GDPR Compliant</span>
+          <span class="footer-badge">ICO Registered</span>
+          <span class="footer-badge">Net Zero Aligned</span>
+          <span class="footer-badge">FSA Compliant</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">Operational Context Graph</a>
+          <a onclick="showPage('platform')">Service-Time Delta Diagnostics</a>
+          <a onclick="showPage('platform')">Agentic Negotiation Protocol</a>
+          <a onclick="showPage('platform')">Menu Behavior Control Layer</a>
+          <a onclick="showPage('platform')">Federated Restaurant Logic Network</a>
+          <a onclick="showPage('platform')">Manager Copilot Interface</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-col">
+          <a onclick="showPage('about')">About RestaurantOS AI</a>
+          <a onclick="showPage('about')">Sandeep Dagar · Founder & CEO</a>
+          <a onclick="showPage('process')">How It Works</a>
+          <a onclick="showPage('faq')">FAQ</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing & Plans</a>
+          <a onclick="showPage('contact')">Request a Demo</a>
+          <a onclick="showPage('contact')">Pilot Programme</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Solutions</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">Independent Premium Restaurants</a>
+          <a onclick="showPage('platform')">Multi-Site Boutique Groups</a>
+          <a onclick="showPage('platform')">Dark Kitchens & QSRs</a>
+          <a onclick="showPage('platform')">SME Operators</a>
+          <a onclick="showPage('pricing')">Starter · £50/mo</a>
+          <a onclick="showPage('pricing')">Professional · £150/mo</a>
+          <a onclick="showPage('pricing')">Enterprise · £300/mo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <p>© 2026 <span>RestaurantOS AI</span> · Manchester & London, UK · UK GDPR Compliant · by Sandeep Dagar</p>
+      <div class="footer-bottom-links">
+        <a onclick="showPage('contact')">Privacy Policy</a>
+        <a onclick="showPage('contact')">Terms of Service</a>
+        <a onclick="showPage('contact')">Confidential Business Plan</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─── PAGE NAV ───────────────────────────────── */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  card.classList.toggle('open');
+  btn.innerHTML=card.classList.contains('open')?'Show Less':'Learn More';
+}
+
+function toggleFAQ(el){el.parentElement.classList.toggle('open');}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+/* ─── CHART THEME ────────────────────────────── */
+const BLU='rgba(139,26,46,1)';
+const BLU2='rgba(139,26,46,0.7)';
+const BLU3='rgba(139,26,46,0.35)';
+const LBLU='rgba(196,147,42,0.8)';
+const LBLU2='rgba(242,223,160,0.7)';
+const GRID='rgba(139,26,46,0.08)';
+const MUTED='rgba(74,26,34,0.8)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+/* ─── MARKET CHARTS ──────────────────────────── */
+function initMarketCharts(){
+  // UK Hospitality SAM by Segment
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Independent Premium','Boutique Groups','Dark Kitchens & QSR','Multi-Site Franchises'],
+      datasets:[{
+        label:'SAM (£ Millions)',
+        data:[120,85,55,70],
+        backgroundColor:[BLU,BLU2,BLU3,LBLU],
+        borderRadius:6,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v+'M'}}}}
+  });
+
+  // Pain Points Doughnut
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Informational Lag Unresolved (72%)','Manual Firefighting Unsustainable (81%)','No Agentic Coordination (96%)','Service DNA Lost on Departure (68%)','No Live Inventory-to-Demand (91%)'],
+      datasets:[{
+        data:[72,81,96,68,91],
+        backgroundColor:[BLU,BLU2,BLU3,LBLU,LBLU2],
+        borderColor:['rgba(139,26,46,0.9)','rgba(139,26,46,0.7)','rgba(139,26,46,0.4)','rgba(196,147,42,0.8)','rgba(242,223,160,0.8)'],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  // Radar Competitive
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['Live Agentic Coordination','Menu-Kitchen Sync','Service-Time Diagnostics','Inventory Conversion','Federated Benchmarking','UK 2025 Tuning'],
+      datasets:[
+        {label:'RestaurantOS AI',data:[5,5,5,5,5,5],backgroundColor:'rgba(139,26,46,0.1)',borderColor:BLU,borderWidth:2,pointBackgroundColor:BLU},
+        {label:'Legacy POS (Zonal/Oracle)',data:[2,1,1,1,1,2],backgroundColor:'rgba(196,147,42,0.06)',borderColor:LBLU,borderWidth:1.5,pointBackgroundColor:LBLU},
+        {label:'Niche Waste (Winnow)',data:[1,1,2,1,1,1],backgroundColor:'rgba(196,147,42,0.05)',borderColor:'rgba(196,147,42,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(196,147,42,0.5)'},
+        {label:'Labour Tools (7shifts)',data:[1,1,1,1,1,1],backgroundColor:'rgba(74,26,34,0.05)',borderColor:'rgba(74,26,34,0.4)',borderWidth:1.5,pointBackgroundColor:'rgba(74,26,34,0.4)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(139,26,46,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  // Market Growth
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['2022','2023','2024','2025','2026','2027','2028','2030'],
+      datasets:[
+        {label:'Global AI Restaurant Mgmt Market (USD B)',data:[8,12,16,22,30,42,58,95],backgroundColor:BLU2,borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'UK AI Hospitality Adoption %',data:[null,2,5,9,18,28,42,62],borderColor:LBLU,borderWidth:2,yAxisID:'y2',tension:0.4,pointBackgroundColor:LBLU,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'$'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{color:MUTED,callback:v=>v+'%'}}}}
+  });
+
+  // Performance Comparison
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Live Agentic Coordination','Menu-Kitchen Sync','Service-Time Diagnostics','Inventory Conversion','Federated Benchmarking','UK Regulatory Compliance'],
+      datasets:[
+        {label:'RestaurantOS AI',data:[98,97,95,96,93,98],backgroundColor:BLU2,borderRadius:5,barPercentage:0.35},
+        {label:'Legacy Market Average',data:[4,3,5,2,1,4],backgroundColor:LBLU2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
